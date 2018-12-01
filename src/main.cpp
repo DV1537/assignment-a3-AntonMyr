@@ -18,6 +18,15 @@ int main(int argc, char* argv[]) {
 
   Coordinate *coordArr;
 
+  Polygon *shapes;
+
+  Coordinate *coordArrC = new Coordinate[4];
+  coordArrC[0] = {1, 1};
+  coordArrC[1] = {1, 2};
+  coordArrC[2] = {1, 3};
+  coordArrC[3] = {4, 1};
+
+
   if(argc == 1) {
     std::cout << "Need input file" << std::endl;
   }
@@ -41,9 +50,16 @@ int main(int argc, char* argv[]) {
     }
   }
 
+  if(line != 2) {
+    std::cout << "Cannot read file, this program requires no more or less than 2 lines of coordinates" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
   readFile.clear();
   readFile.seekg(0, std::ios::beg);
 
+  int currentLine = 0;
+  shapes = new Polygon[line];
   while(std::getline(readFile, c)){
     size = getFloatCount(c);
     if(size % 2 == 0) {
@@ -58,11 +74,18 @@ int main(int argc, char* argv[]) {
           i++;
         }
       }
-      Polygon shape(coordArr, coordSize);
-      std::cout << "Area: " << shape.area() << std::endl;
+
+      shapes[currentLine] = {coordArr, coordSize};
       delete [] coordArr;
+      currentLine++;
     }
   }
+
+  Polygon summed = shapes[0] + shapes[1];
+
+  std::cout << "Area: " << summed.area() << std::endl;
+
+
 
   readFile.close();
 }
