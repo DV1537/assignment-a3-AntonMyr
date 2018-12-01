@@ -3,6 +3,8 @@
 #include <cmath>
 #include "../include/Polygon.hpp"
 
+Polygon::Polygon() {};
+
 Polygon::Polygon(Coordinate *coords, int coordSize) {
   pointCount = coordSize;
   coordsArr = new Coordinate[pointCount];
@@ -25,11 +27,75 @@ Polygon::Polygon(Coordinate *coords, int coordSize) {
   }
 }
 
+Polygon::Polygon(const Polygon &source) {
+  convex = source.convex;
+  regular = source.regular;
+  convexHasBeenRun = source.convexHasBeenRun;
+  positionHasBeenRun = source.positionHasBeenRun;
+  typeOfShape = source.typeOfShape;
+  center = source.center;
+  pointCount = source.pointCount;
+
+  coordsArr = new Coordinate[source.pointCount];
+  std::copy(source.coordsArr, source.coordsArr + pointCount, coordsArr);
+}
+
+Polygon &Polygon::operator=(const Polygon &source){
+  if(this == &source) {
+    return *this;
+  }
+  convex = source.convex;
+  regular = source.regular;
+  convexHasBeenRun = source.convexHasBeenRun;
+  positionHasBeenRun = source.positionHasBeenRun;
+  typeOfShape = source.typeOfShape;
+  center = source.center;
+  pointCount = source.pointCount;
+
+  delete [] coordsArr;
+
+  coordsArr = new Coordinate[source.pointCount];
+  std::copy(source.coordsArr, source.coordsArr + pointCount, coordsArr);
+  return *this;
+}
+
+std::ostream& operator<<(std::ostream& stream, const Polygon &Plgn) {
+  stream << "Polygon vertices: ";
+  for(int i = 0; i < Plgn.pointCount; i++) {
+    stream << "(" << Plgn.coordsArr[i].getX() << ", " << Plgn.coordsArr[i].getY() << ") ";
+  }
+
+  return stream << std::endl;
+}
+
+Polygon Polygon::operator+(const Polygon &p2) {
+  int totalPointAmount = pointCount + p2.pointCount;
+  Coordinate *sumCoords = new Coordinate[totalPointAmount];
+  std::copy(coordsArr, coordsArr + pointCount, sumCoords);
+  std::copy(p2.coordsArr, p2.coordsArr + p2.pointCount, sumCoords + pointCount);
+
+  return Polygon(sumCoords, totalPointAmount);
+}
+
 Polygon::~Polygon() {
   delete [] coordsArr;
 }
 
 std::string Polygon::getType(){
+  switch(pointCount){
+  case 1:
+    typeOfShape = "Point";
+    break;
+  case 2:
+    typeOfShape = "Line";
+    break;
+  case 3:
+    typeOfShape = "Triangle";
+    break;
+  default:
+    typeOfShape = "Polygon";
+    break;
+  }
   return typeOfShape;
 }
 
@@ -63,7 +129,10 @@ float Polygon::area() {
     j = i;
   }
 
-  return area/2;
+  if(area == 0)
+    return -1;
+
+  return std::abs(area/2);
 }
 
 float Polygon::circumference() {
