@@ -62,13 +62,17 @@ int main(int argc, char* argv[]) {
   int currentLine = 0;
   shapes = new Polygon[line];
   while(std::getline(readFile, c)){
+
     size = getFloatCount(c);
+
     if(size % 2 == 0) {
+
       coordSize = size/2;
       floatsFromString = new float[size];
       coordArr = new Coordinate[coordSize];
       extractFloatsFromString(c, floatsFromString, size);
       int i = 0;
+
       while(i < coordSize) {
         for(int j = 0; j < size; j+=2) {
           coordArr[i] = {floatsFromString[j], floatsFromString[j+1]};
@@ -78,6 +82,7 @@ int main(int argc, char* argv[]) {
 
       shapes[currentLine] = {coordArr, coordSize};
       delete [] coordArr;
+      delete [] floatsFromString;
       currentLine++;
     }
   }
@@ -88,6 +93,8 @@ int main(int argc, char* argv[]) {
   area = std::roundf(area * 1000) / 1000;
 
   std::cout << "Area: " << area << std::endl;
+
+  delete [] shapes;
 
   readFile.close();
 }
