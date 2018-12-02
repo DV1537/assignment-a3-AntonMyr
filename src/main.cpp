@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cmath>
 #include <fstream>
 #include "../include/Coordinate.hpp"
 #include "../include/Polygon.hpp"
@@ -83,9 +84,10 @@ int main(int argc, char* argv[]) {
 
   Polygon summed = shapes[0] + shapes[1];
 
-  std::cout << "Area: " << summed.area() << std::endl;
+  float area = summed.area();
+  area = std::roundf(area * 1000) / 1000;
 
-
+  std::cout << "Area: " << area << std::endl;
 
   readFile.close();
 }
