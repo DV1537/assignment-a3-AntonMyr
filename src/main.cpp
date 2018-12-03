@@ -21,13 +21,6 @@ int main(int argc, char* argv[]) {
 
   Polygon *shapes;
 
-  Coordinate *coordArrC = new Coordinate[4];
-  coordArrC[0] = {1, 1};
-  coordArrC[1] = {1, 2};
-  coordArrC[2] = {1, 3};
-  coordArrC[3] = {4, 1};
-
-
   if(argc == 1) {
     std::cout << "Need input file" << std::endl;
   }
